@@ -4,7 +4,7 @@ Dep. Variable:           log_DV_Crime   R-squared (uncentered):                 
 Model:                            OLS   Adj. R-squared (uncentered):              0.966
 Method:                 Least Squares   F-statistic:                              2201.
 Date:                Mon, 21 Apr 2025   Prob (F-statistic):                   4.51e-170
-Time:                        12:25:28   Log-Likelihood:                         -318.96
+Time:                        20:38:26   Log-Likelihood:                         -318.96
 No. Observations:                 235   AIC:                                      643.9
 Df Residuals:                     232   BIC:                                      654.3
 Df Model:                           3                                                  
@@ -23,5 +23,5 @@ Kurtosis:                       3.286   Cond. No.                         58.4
 ==============================================================================
 
 Notes:
-[1] Rï¿½ is computed without centering (uncentered) since the model does not contain a constant.
+[1] R² is computed without centering (uncentered) since the model does not contain a constant.
 [2] Standard Errors assume that the covariance matrix of the errors is correctly specified.

@@ -4,7 +4,7 @@ Dep. Variable:      log_Violent_Crime   R-squared (uncentered):                 
 Model:                            OLS   Adj. R-squared (uncentered):              0.980
 Method:                 Least Squares   F-statistic:                              3863.
 Date:                Mon, 21 Apr 2025   Prob (F-statistic):                   1.14e-197
-Time:                        12:25:28   Log-Likelihood:                         -310.01
+Time:                        20:38:26   Log-Likelihood:                         -310.01
 No. Observations:                 235   AIC:                                      626.0
 Df Residuals:                     232   BIC:                                      636.4
 Df Model:                           3                                                  

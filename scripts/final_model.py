@@ -88,19 +88,21 @@ fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 sns.scatterplot(x=y_actual_log_DV_Crime, y=y_pred_log_DV_Crime, ax=axes[0], color='steelblue')
 axes[0].plot([y_actual_log_DV_Crime.min(), y_actual_log_DV_Crime.max()], 
              [y_actual_log_DV_Crime.min(), y_actual_log_DV_Crime.max()], color='red', linestyle='--')
-axes[0].set_title('DV-Related Crime: Actual vs Predicted', fontsize=14)
-axes[0].set_xlabel('Actual log(DV Crime)', fontsize=12)
-axes[0].set_ylabel('Predicted log(DV Crime)', fontsize=12)
+axes[0].set_title('DV-Related Crime: Actual vs Predicted', fontsize=16, fontweight='bold')
+axes[0].set_xlabel('Actual log(DV Crime)', fontsize=14)
+axes[0].set_ylabel('Predicted log(DV Crime)', fontsize=14)
 axes[0].grid(True)
 
 # Plot for Violent Crime
 sns.scatterplot(x=y_actual_log_Violent_Crime, y=y_pred_log_Violent_Crime, ax=axes[1], color='darkorange')
 axes[1].plot([y_actual_log_Violent_Crime.min(), y_actual_log_Violent_Crime.max()], 
              [y_actual_log_Violent_Crime.min(), y_actual_log_Violent_Crime.max()], color='red', linestyle='--')
-axes[1].set_title('Violent Crime: Actual vs Predicted', fontsize=14)
-axes[1].set_xlabel('Actual log(Violent Crime)', fontsize=12)
-axes[1].set_ylabel('Predicted log(Violent Crime)', fontsize=12)
+axes[1].set_title('Violent Crime: Actual vs Predicted', fontsize=16, fontweight='bold')
+axes[1].set_xlabel('Actual log(Violent Crime)', fontsize=14)
+axes[1].set_ylabel('Predicted log(Violent Crime)', fontsize=14)
 axes[1].grid(True)
+
+fig.suptitle("Model Fit: Predicted vs Actual Crime Rates", fontsize=24, fontweight='bold')
 
 plt.tight_layout()
 plt.subplots_adjust(wspace=0.3)
@@ -125,16 +127,19 @@ vc_df = pd.DataFrame(list(vc_coefficients.items()), columns=['SEIFA Score', 'Vio
 # Set up the matplotlib figure
 fig, axes = plt.subplots(1, 2, figsize=(15, 6))
 sns.barplot(x='SEIFA Score', y='DV Crime Coefficient', data=dv_df, ax=axes[0], palette='pastel')
-axes[0].set_title('Regression Coefficients for SEIFA Scores on DV-Related Crime Rates')
-axes[0].set_xlabel('SEIFA Score')
-axes[0].set_ylabel('DV Coefficient')
+axes[0].set_title('Coefficients for SEIFA Scores on DV-Related Crime Rates', fontsize=16, fontweight='bold')
+axes[0].set_xlabel('SEIFA Score', fontsize=14)
+axes[0].set_ylabel('DV Coefficient', fontsize=14)
 axes[0].axhline(0, color='black', linewidth=1)
 
 sns.barplot(x='SEIFA Score', y='Violent Crime Coefficient', data=vc_df, ax=axes[1], palette='pastel')
-axes[1].set_title('Regression Coefficients for SEIFA Scores on Violent Crime Rates')
-axes[1].set_xlabel('SEIFA Score')
-axes[1].set_ylabel('Violent Crime Coefficient')
+axes[1].set_title('Coefficients for SEIFA Scores on Violent Crime Rates', fontsize=16, fontweight='bold')
+axes[1].set_xlabel('SEIFA Score', fontsize=14)
+axes[1].set_ylabel('Violent Crime Coefficient', fontsize=14)
 axes[1].axhline(0, color='black', linewidth=1) 
+
+fig.suptitle("Regression Coefficients for SEIFA Scores on Crime Rates", fontsize=24)
+
 plt.tight_layout()
 plt.subplots_adjust(wspace=0.3)
 plt.savefig('../plots/regression_coefficients_seifa_crime.png', dpi=300, bbox_inches='tight')
