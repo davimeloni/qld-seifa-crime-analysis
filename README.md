@@ -1,4 +1,4 @@
-# 📊 (LEARNING PROJECT) SEIFA & Crime Rate Analysis (Queensland)
+# 📊 ***LEARNING PROJECT*** SEIFA & Crime Rate Analysis (Queensland)
 
 This repository contains the code and analysis for exploring the relationship between socio-economic indicators (as measured by SEIFA indexes) and violent and domestic violence (DV) crime rates in Queensland. The goal of the analysis is to understand how factors such as economic resources, education, and disadvantage impact crime rates in different regions of Queensland.
 
@@ -6,7 +6,7 @@ This repository contains the code and analysis for exploring the relationship be
 
 ## ⚠️ Disclaimer
 
-This project was created as a learning exercise in data analysis and statistical modeling. While care has been taken in cleaning and analyzing the data, the results and interpretations are subject to the limitations of an individual learning process. Conclusions drawn should not be considered authoritative or used for policy-making without further validation.
+This project was created as a self-guided learning exercise in data analysis and statistical modeling. While care has been taken in cleaning and analyzing the data, the results and interpretations are subject to the limitations of an individual learning process. Conclusions drawn should not be considered authoritative or used for policy-making without further validation.
 
 ---
 
