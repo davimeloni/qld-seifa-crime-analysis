@@ -22,14 +22,14 @@ The socio-economic factors used in this analysis are derived from the SEIFA inde
 - **IER**: Index of Education and Employment
 - **IEO**: Index of Economic Opportunity
 
-The project aims to explore how these socio-economic factors correlate with crime rates and how they can be used to predict crime in different Queensland suburbs.
+The project aims to explore how these socio-economic factors correlate with crime rates in different Queensland suburbs.
 
 ## Data Sources
 
 - **SEIFA Indexes (2021)**  
   [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/people-and-communities/socio-economic-indexes-areas-seifa-australia/latest-release#data-downloads)
 
-- **Crime Data by Police Division (2018–Latest)**  
+- **Crime Data by Police Division (Jan-2018 to Mar-2025)**  
   [Queensland Government Open Data Portal](https://www.data.qld.gov.au/dataset/offence-numbers-police-divisions-monthly-from-july-2001)
 
 ## Methodology
