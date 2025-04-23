@@ -23,6 +23,7 @@ Dependencies:
 - numpy
 - matplotlib
 - seaborn
+- scikit-learn
 
 Author: Davi Santos Meloni
 Created: 20-04-2025
@@ -31,7 +32,10 @@ Created: 20-04-2025
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 import seaborn as sns
+
+print("Starting SEIFA Offences Preprocessing Script...")
 
 # load the dataset
 df = pd.read_csv('../data/crimedataset.csv')
@@ -102,8 +106,6 @@ crime_df["DV-Related"] = crime_df[dv_related_cols].sum(axis=1)
 crime_df["Other Crimes"] = crime_df[other_crime_cols].sum(axis=1)
 crime_df.rename(columns={"total": "Total Crimes"}, inplace=True)
 
-crime_df.head()
-
 # Grouping the data by crime categories
 # and summing the values for each category
 grouped_cols = ["Violent Crime", "Property Crime", "Drug Offences", "DV-Related", "Other Crimes"]
@@ -115,23 +117,17 @@ grouped_crime_df = crime_df[[
 # for some reason the default total column was not being calculated correctly, so we are calculating it manually
 grouped_crime_df.loc[:, "Total Crimes"] = grouped_crime_df[grouped_cols].sum(axis=1)
 
-grouped_crime_df.head()
-
 # merge indexes-scores.csv with the grouped crime DataFrame
 merged_df = pd.merge(grouped_crime_df, is_df, how='right', left_on='Division', right_on='Localities')
 merged_df.drop(columns='Localities', inplace=True)
-# Preview the merged DataFrame
-print(merged_df.head())
 
 crime_columns = ["Violent Crime", "Property Crime", "Drug Offences", "DV-Related", "Other Crimes", "Total Crimes"]
 
-# Calculate the crime rate per 100,000 people for each crime category
+# Calculate the crime rate per 1,000 people for each crime category
 # and replace the original values in the DataFrame
 # to normalize the data and make it easier to compare across different regions
 for col in crime_columns:
-    merged_df[col] = (merged_df[col] / merged_df["Usual Resident Population"]) * 100000
-    
-merged_df.head()
+    merged_df[col] = (merged_df[col] / merged_df["Usual Resident Population"]) * 1000
 
 # describing the population column to remove low values
 merged_df['Usual Resident Population'].describe()
@@ -162,35 +158,42 @@ print(above_threshold["Usual Resident Population"].sum())
 # and resetting the index for clarity
 filtered_merged_df = merged_df[merged_df["Usual Resident Population"] >= population_threshold].copy()
 filtered_merged_df.reset_index(drop=True, inplace=True)
-# Preview the filtered DataFrame
-print(filtered_merged_df.head())
 
 # describe grouped crime data to get a summary of the data
 # and check for outliers / divisions with low crime rates
-filtered_merged_df["Total Crimes"].describe()
+# setting DV-Related and Violent Crime as the main focus for analysis
+filtered_merged_df["DV-Related"].describe()
+filtered_merged_df["Violent Crime"].describe()
 
-# scaling by log1p the Total Crimes column for better visualization
-log_grouped_crime_df = np.log1p(filtered_merged_df["Total Crimes"])
+# combining and scaling by log1p the DV-Related with Violent Crimes for better visualization of the focused analysis
+filtered_merged_df['Violent_DV_Crime'] = filtered_merged_df['DV-Related'] + filtered_merged_df['Violent Crime']
+filtered_merged_df['log_vdv_crime'] = np.log1p(filtered_merged_df['Violent_DV_Crime'])
 
-log_grouped_crime_df.describe()
+# use standard scaler to scale the log of DV and Violent Crimes
+scaler = StandardScaler()
+filtered_merged_df['scaled_log_vdv_violence'] = scaler.fit_transform(filtered_merged_df[['log_vdv_crime']])
+
+# check and remove outliers in the data
+# Calculate the IQR for the scaled log_vdv_violence column
+Q1 = filtered_merged_df['scaled_log_vdv_violence'].quantile(0.25)
+Q3 = filtered_merged_df['scaled_log_vdv_violence'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define bounds
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+df_clean = filtered_merged_df[filtered_merged_df['scaled_log_vdv_violence'] <= upper_bound].copy()
+print(f"Number of outliers removed: {len(filtered_merged_df) - len(df_clean)}")
+print(f"New shape of the DataFrame: {df_clean.shape}")
 
 #set Seaborn theme for cleaner visuals
 sns.set_theme(style="whitegrid")
 
-# Plotting the distribution of total crimes per division
-# using log1p to scale the data for better visualization
-plt.hist(log_grouped_crime_df, bins=50)
-plt.title("Log-Scaled Distribution of Total Crimes per Division")
-plt.xlabel("log(Total Crimes + 1)")
-plt.ylabel("Number of Divisions")
-plt.savefig('../plots/total_crimes_log_scaled_distribution.png', dpi=300, bbox_inches='tight')
-
-# the data looks normally distributed, so we can use a normal distribution to fit the data
-
-# Set up boxplot to visualize the distribution of log(Total Crimes + 1)
+# Set up boxplot to visualise the distribution of scaled log(Violent and DV Crimes)
 plt.figure(figsize=(12, 2))
 sns.boxplot(
-    x=log_grouped_crime_df, 
+    x=df_clean['scaled_log_vdv_violence'], 
     color="lightblue",
     width=0.4,
     fliersize=4,
@@ -198,18 +201,25 @@ sns.boxplot(
 )
 
 # Final touches
-plt.title("Annotated Boxplot of log(Total Crimes + 1)", fontsize=14)
-plt.xlabel("log(Total Crimes + 1)")
+plt.title("Annotated Boxplot of Log-Scaled Violent and DV Crimes", fontsize=14)
+plt.xlabel("log-Scaled(Violent and DV Crimes + 1)")
 plt.tight_layout()
-plt.savefig('../plots/total_crimes_log_scaled_boxplot.png', dpi=300, bbox_inches='tight')
+plt.savefig('../plots/violent_dv_crimes_log_scaled_boxplot.png', dpi=300, bbox_inches='tight')
 
-# Looking at the boxplot, we can see that there are some outliers above the 75th percentile
-# however, adjusting the series to log1p has helped to reduce the impact of these outliers
-# data seems ok after looking at the histogram and boxplot
+# histogram of the cleaned data to see the normal distribution of the data
+df_clean = df_clean.dropna()
+df_clean.describe()
+plt.hist(df_clean['scaled_log_vdv_violence'])
+plt.title("Log-Scaled Distribution of DV and Violent Crimes per Division")
+plt.xlabel("log-Scaled(DV and Violent Crimes + 1)")
+plt.ylabel("Number of Divisions")
+plt.savefig('../plots/violent_dv_crimes_log_scaled_distribution.png', dpi=300, bbox_inches='tight')
 
 # save the filtered DataFrame to a new CSV file
-filtered_merged_df.to_csv("../data/division_offences_by_seifa_indexes.csv", index=False)
+df_clean.to_csv("../data/division_offences_by_seifa_indexes.csv", index=False)
 
+print("Filtered dataset saved to division_offences_by_seifa_indexes.csv")
+print("SEIFA Offences Preprocessing Script completed successfully.")
 
 
 
