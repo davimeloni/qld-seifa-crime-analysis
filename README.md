@@ -1,6 +1,6 @@
 # 📊 SEIFA & Crime Rate Analysis (Queensland)
 
-This project investigates the relationship between socio-economic disadvantage (measured by SEIFA indexes) and crime rates—focusing specifically on domestic violence and violent crimes—across Queensland local government areas. The goal is to identify how socio-economic conditions influence serious crime, using regression analysis and data visualization.
+This repository contains the code and analysis for exploring the relationship between socio-economic indicators (as measured by SEIFA indexes) and violent and domestic violence (DV) crime rates in Queensland. The goal of the analysis is to understand how factors such as economic resources, education, and disadvantage impact crime rates in different regions of Queensland.
 
 ---
 
@@ -10,63 +10,76 @@ This project was created as a learning exercise in data analysis and statistical
 
 ---
 
-## 🔍 Project Overview
+## Project Overview
 
-**Focus**:  
-- Domestic violence-related and violent crime rates
+The analysis specifically focuses on the following crime categories:
+- **Violent Crime**
+- **Domestic Violence (DV)-Related Crime** (e.g., breaches of Domestic Violence Protection Orders)
 
-**Exclusions**:  
-- Property and drug-related crimes (to isolate socio-economic impact)
+The socio-economic factors used in this analysis are derived from the SEIFA indexes published by the Australian Bureau of Statistics. These indexes include:
+- **IRSDA**: Index of Relative Socio-Economic Advantage and Disadvantage
+- **IRSD**: Index of Relative Socio-Economic Disadvantage
+- **IER**: Index of Education and Employment
+- **IEO**: Index of Economic Opportunity
 
-**Data Sources**:  
-- SEIFA 2021 Indexes from the Australian Bureau of Statistics (ABS)  
-- Crime data from Queensland Government Open Data Portal
+The project aims to explore how these socio-economic factors correlate with crime rates and how they can be used to predict crime in different Queensland suburbs.
 
----
+## Data Sources
 
-## 🧠 Methodology
+- **SEIFA Indexes (2021)**  
+  [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/people/people-and-communities/socio-economic-indexes-areas-seifa-australia/latest-release#data-downloads)
 
-- Grouped raw crime data into major categories  
-- Normalized crime rates by population  
-- Filtered out low-population areas  
-- Applied log-transformation to crime rates  
-- Fitted multiple linear regression using SEIFA indexes (IRSD, IER, IEO)  
-- Evaluated model using R², residual diagnostics, and coefficient analysis
+- **Crime Data by Police Division (2018–Latest)**  
+  [Queensland Government Open Data Portal](https://www.data.qld.gov.au/dataset/offence-numbers-police-divisions-monthly-from-july-2001)
 
----
+## Methodology
 
-## 📈 Key Findings
+The analysis employed several statistical methods to explore the relationships between socio-economic factors and crime rates:
+1. **Pearson Correlation**: To examine the linear relationships between each SEIFA index and crime rates.
+2. **Simple Linear Regression**: To quantify the strength and significance of these relationships.
+3. **Multicollinearity Check**: Correlation analysis and Variance Inflation Factor (VIF) were used to identify and address multicollinearity.
+4. **Lasso and Ridge Regression**: These models were employed to address multicollinearity and provide more reliable estimates.
 
-- **IRSD (Disadvantage)**: Negatively correlated with DV and violent crimes  
-- **IER (Education & Employment)** and **IEO (Economic Opportunity)**: Showed slight positive correlations with crime  
-- All predictors were statistically significant (*p* < 0.001)  
-- Regression models achieved **R² = 0.966** (DV) and **R² = 0.980** (Violent), indicating strong explanatory power  
+### Performance Metrics
+- **R² (R-squared)**: Used to measure how well the models explain the variance in crime rates.
+- **MSE (Mean Squared Error)**: Used to evaluate the predictive accuracy of the models.
 
-> **Note**: While the SEIFA indexes were statistically significant predictors of crime rates, the relationships were moderate. Data points showed a general trend but were fairly spread out—suggesting that, while socio-economic disadvantage matters, other factors likely play a role too.
+## Analysis Results
 
----
+### Pearson Correlation Results
+- **IER**: Moderately strong negative correlation (-0.610), indicating that areas with higher economic resources tend to have lower violent/DV crime rates.
+- **IRSD**: Moderate negative correlation (-0.510), suggesting that socio-economically disadvantaged areas have higher crime rates.
+- **IRSDA**: Weaker negative correlation (-0.327), showing a weaker relationship with crime rates.
+- **IEO**: No significant correlation (-0.105), suggesting that education and occupation alone may not explain crime rates effectively.
 
-## 🛠️ How to Run
+### Simple Linear Regression Results
+- **IER**: Explained 26% of the variance in violent/DV crime rates.
+- **IRSD**: Explained 20% of the variance.
+- **IRSDA**: Explained 9% of the variance.
+- **IEO**: Explained less than 2%, showing a very weak relationship.
 
-   ```bash
-   git clone https://github.com/your-username/seifa-crime-analysis.git
+### Lasso and Ridge Regression Results
 
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
+| Index   | Lasso Coefficient | Ridge Coefficient |
+|---------|-------------------|-------------------|
+| IRSDA   | 0.0               | 0.042             |
+| IRSD    | -0.256            | -0.288            |
+| IER     | -0.337            | -0.325            |
+| IEO     | 0.259             | 0.237             |
 
-    pip install -r requirements.txt
-
-    python seifa_offences_preprocessing.py
-
-    python final_model.py
-```
----
+### Key Insights
+- The **IER** index was the most significant predictor, with higher economic resources linked to lower crime rates.
+- The **IEO** index showed no significant correlation, suggesting that education and occupation alone do not explain crime rates.
 
 ## Personal Note
 This report was born from that curiosity and enthusiasm. Despite being very much a beginner-level project, creating it has been both a rewarding and highly educational experience.
 
-## 📝 Key Findings
+## License
 This project is licensed under the MIT License.
+
+## Acknowledgments
+- Australian Bureau of Statistics for providing SEIFA index data.
+- Queensland Government Open Data Portal for providing crime data.
 
 
 
