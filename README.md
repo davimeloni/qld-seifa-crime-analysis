@@ -69,6 +69,7 @@ The analysis employed several statistical methods to explore the relationships b
 | IEO     | 0.259             | 0.237             |
 
 ### Key Insights
+- Across all SEIFA indexes, the models indicate that they collectively explain approximately 30% of the variance in violent and DV crime rates. 
 - The **IER** index was the most significant predictor, with higher economic resources linked to lower crime rates.
 - The **IEO** index showed no significant correlation, suggesting that education and occupation alone do not explain crime rates.
 
